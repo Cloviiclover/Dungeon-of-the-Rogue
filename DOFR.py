@@ -80,28 +80,28 @@ MAPS = { #All maps/rooms in the game
     ],
     "r_4": [
         "########### ############",
-        "#........##...D........ ",
-        "#.######.##.####.#####.#",
-        "#.######....####.#...#.#",
-        "#.##############.#.#.#.#",
-        "#................#.#...#",
-        "##################.#####",
-        "###########........#####",
-        "###########/############",
+        "#.........#...D........ ",
+        "#....T....#.############",
+        "#.........#.#T...TT...T#",
+        "#.#########.#..........#",
+        "#...........#####//#####",
+        "#......................#",
+        "#......................#",
+        "########### ############",
     ],
     "r_5": [
         "########### ############",
-        "#...#.....#.....#......#",
-        "#.#.#.###.#####.#.####.#",
-        "#.#...###.....#...####.#",
-        "#.###########.########.#",
-        "#...........#..........#",
-        "###########.############",
-        "###########.############",
-        "###########/############",
+        "#..#.T.#..#.....#......#",
+        "#..#...#..#####.#.####.#",
+        "#.............#...####.#",
+        "#.T...........########.#",
+        "#......................#",
+        "######################.#",
+        "###########............#",
+        "########### ############",
     ],
     "r_6": [
-        "################ #######",
+        "########################",
         "#.T.#.....#............#",
         "#.........#............#",
         "#####.....#####...######",
@@ -118,7 +118,7 @@ MAPS = { #All maps/rooms in the game
         "#......................#",
         "###########B############",
         "#......................#",
-        "#.....T....T....T......#",
+        "#..........T...........#",
         "#......................#",
         "########################",
     ],
@@ -204,7 +204,7 @@ def draw(game_map, player_pos, messages=None):
 def can_move(game_map, r,c):
     if r < 0 or c < 0 or r >= len(game_map) or c >= len(game_map[0]):
         return False
-    return game_map[r][c] in ("."," ")#Walkable tiles
+    return game_map[r][c] in ("."," ") #Walkable tiles
 
 def interact_at(game_map, r,c, messages, steal_player):
     global stolen
@@ -231,7 +231,7 @@ def interact_at(game_map, r,c, messages, steal_player):
                 game_map[r][c] = "."
             else:
                 messages.append("You don't have any space.")
-        elif current_map == "r_1" or current_map == "r_6":
+        elif current_map == "r_1" or current_map == "r_6" or current_map == "r_4" or current_map == "r_5":
             if "---" in player["other"]["inv"]:
                 messages.append("You found a treasure!")
                 loot = random.randint(1,4)
@@ -249,13 +249,21 @@ def interact_at(game_map, r,c, messages, steal_player):
                     game_map[r][c] = "."
             else:
                 messages.append("You don't have any space.")
-        elif current_map == "r_3" or current_map == "r_7":
+        elif current_map == "r_3":
             if "---" in player["other"]["inv"]:
                 messages.append("You found a treasure!")
                 player["other"]["inv"][player["other"]["inv"].index("---")] = "Golden Juice"
                 game_map[r][c] = "."
             else:
                 messages.append("You don't have any space.")
+        elif current_map == "r_7":
+            clear()
+            print_ascii("ascii/victory.txt")
+            print_slow("""\nCONGRATULATIONS! You defeated the Dimensional Beast and stole it's treasure.
+The dungeon disappeared after the treasure was stolen. Now no one will go missing thanks to you.
+Although, it seems like you only care about the treasures you found. Makes sense since you're a rouge.""")
+            input("\n\nPRESS ENTER TO EXIT.")
+            sys.exit(0)
     elif ch == "N":
         if current_map == "o_1":
             messages.append("NPC: 'This dungeon appeared out of nowhere.'")
@@ -589,7 +597,7 @@ def overworld():
                     game_map = MAPS[current_map]
                     player_r, player_c = dest_r, dest_c
                     continue
-                if random.randint(1,100) <= 2 and current_map != "o_1" and current_map != "o_2":
+                if random.randint(1,100) <= 3 and current_map != "o_1" and current_map != "o_2":
                     draw(game_map, (player_r, player_c), messages)
                     print_slow("\n(!) BATTLE START!")
                     time.sleep(3)
@@ -1553,7 +1561,7 @@ player = { #All Player info
         "next_lv":
             5,
         "gold":
-            100,
+            20,
         "inv":
             ["---","---","---","---","---","---","---","---"],
         "key_inv":
@@ -1646,17 +1654,17 @@ enemies = { #All enemy info
         "name":
             "Dimensional Beast",
         "hp":
-            100,
+            75,
         "maxhp":
-            100,
+            75,
         "mp":
             0,
         "maxmp":
             0,
         "atk":
-            30,
+            19,
         "def":
-            3,
+            2,
         "magic":
             5,
         "spells":
@@ -1880,6 +1888,7 @@ items = { #All Item info
     }
 }
 
+#Other variables
 damage_player = 0
 mp_deplete_player = 0
 heal_hp_player = 0
@@ -1896,6 +1905,27 @@ e_num = 0
 idx = 0
 steal_player = 0
 stolen = False
+
+print_ascii("ascii/title.txt")
+input("""                                                                   NEW GAME
+                                                                 PRESS ENTER""")
+
+
+while True:
+    clear()
+    
+    print_slow("Name your character. [Limit 10 Characters]")
+    player["rogue"]["name"] = input("\n\n--> ")
+    if player["rogue"]["name"].strip() == "":
+        player["rogue"]["name"] = "ROGUE"
+        clear()
+        break
+    elif len(player["rogue"]["name"]) <= 10:
+        clear()
+        break
+    else:
+        print_slow("\nYour name is too long. Try again.")
+        time.sleep(1)
 
 current_map = "o_1"
 game_map = MAPS[current_map]
