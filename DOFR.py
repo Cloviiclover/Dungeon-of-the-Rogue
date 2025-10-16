@@ -102,13 +102,13 @@ MAPS = { #All maps/rooms in the game
     ],
     "r_6": [
         "########################",
-        "#.T.#.....#............#",
+        "#.T.#.....#.....T......#",
         "#.........#............#",
         "#####.....#####...######",
         " ......................#",
         "#####..............#...#",
         "#..................#...#",
-        "#.N.#..............#.T.#",
+        "#.N.#.......T......#.T.#",
         "########################",
     ],
     "r_7": [
@@ -532,7 +532,10 @@ Press enter to go back.""")
             choice_map = input("--> ")
             if choice_map.lower() == "y":
                 messages.append(f"{player["rogue"]["name"]} blew up the wall.")
-                game_map[r][c] = " "
+                if current_map != "r_4":
+                    game_map[r][c] = " "
+                else:
+                    game_map[r][c] = "."
                 del player["other"]["inv"][player["other"]["inv"].index("Bomb")]
                 player["other"]["inv"].append("---")
             else:
@@ -1153,6 +1156,7 @@ def mp_stars(player): #MP stars generation
     player["other"]["mp_stars"] = bar
 
 def battle(player, enemies, damage_player, damage_enemy, heal_hp_player, heal_hp_enemy, mp_deplete_player, spells, defend_player, defend_enemy, run, enemy_choice, level_system, idx, items): #The entire battle system
+    global current_map, game_map, player_r, player_c
     while True:
         while True:
             if len(enemies["enemy"]["spells"]) > 0:
@@ -1514,7 +1518,13 @@ You got {enemies["enemy"]["xp_given"]} XP and {enemies["enemy"]["gold_given"]} G
             clear()
             print_ascii("ascii/game_over.txt")
             time.sleep(5)
-            sys.exit(0)
+            current_map = "o_1"
+            game_map = MAPS[current_map]
+            player_r, player_c = 10, 17
+            player["other"]["inv"] = ["---","---","---","---","---","---","---","---"]
+            player["rogue"]["hp"] = player["rogue"]["maxhp"]
+            player["rogue"]["mp"] = player["rogue"]["maxmp"]
+            break
 
 player = { #All Player info
     "rogue": { #All ROGUE info
