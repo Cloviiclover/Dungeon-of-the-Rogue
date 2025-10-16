@@ -1058,7 +1058,7 @@ Escaped!""")
             
 def level_stats(player): #All stats going up when levelling up
     if player["other"]["lv"] < 99:
-        print_slow(f"""\n\nYou leveled up!
+        print_slow(f"""\n\nYou levelled up!
 LV: {player["other"]["lv"]} --> LV: {player["other"]["lv"]+1}
 HP: {player["rogue"]["maxhp"]} --> HP: {player["rogue"]["maxhp"]+7}
 MP: {player["rogue"]["maxmp"]} --> MP: {player["rogue"]["maxmp"]+2}
@@ -1075,7 +1075,7 @@ MAGIC: {player["rogue"]["magic"]} --> MAGIC: {player["rogue"]["magic"]+1}""")
         player["rogue"]["magic"] += 1
         player["other"]["next_lv"] += 10+(3*player["other"]["lv"])
     if player["other"]["lv"] == 99:
-        print_slow(f"""\n\nYou leveled up!
+        print_slow(f"""\n\nYou levelled up!
 LV: {player["other"]["lv"]} --> LV: {player["other"]["lv"]+1}
 HP: {player["rogue"]["maxhp"]} --> HP: 999
 MP: {player["rogue"]["maxmp"]} --> MP: {player["rogue"]["maxmp"]+2}
@@ -1156,7 +1156,7 @@ def mp_stars(player): #MP stars generation
     player["other"]["mp_stars"] = bar
 
 def battle(player, enemies, damage_player, damage_enemy, heal_hp_player, heal_hp_enemy, mp_deplete_player, spells, defend_player, defend_enemy, run, enemy_choice, level_system, idx, items): #The entire battle system
-    global current_map, game_map, player_r, player_c
+    global current_map, game_map, player_r, player_c, stolen
     while True:
         while True:
             if len(enemies["enemy"]["spells"]) > 0:
@@ -1524,6 +1524,7 @@ You got {enemies["enemy"]["xp_given"]} XP and {enemies["enemy"]["gold_given"]} G
             player["other"]["inv"] = ["---","---","---","---","---","---","---","---"]
             player["rogue"]["hp"] = player["rogue"]["maxhp"]
             player["rogue"]["mp"] = player["rogue"]["maxmp"]
+            stolen = False
             break
 
 player = { #All Player info
